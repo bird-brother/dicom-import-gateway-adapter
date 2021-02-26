@@ -1,2 +1,2 @@
-# dicom-import-gateway-adapter
-DICOM Import Gateway Adapter (D-IGA)
+# dicom-import-gateway-adapter  (D-IGA)
+DICOM Import Gateway Adapter 
