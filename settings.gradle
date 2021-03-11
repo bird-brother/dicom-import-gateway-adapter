@@ -1,0 +1,8 @@
+//rootProject.name = 'adapter'
+include 'import'
+include 'dicom_util'
+include 'util'
+
+
+
+

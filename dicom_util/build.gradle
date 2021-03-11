@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+}
+
+buildDir = '/tmp/gradle_build/dicom_adapter/dicom_util'
+
+sourceCompatibility = 1.11
+group 'org.bird.dicom.gateway'
+version '1.0.0'
+
+compileJava {
+    // Print out detailed deprecation warnings.
+    options.deprecation = true
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'http://www.dcm4che.org/maven2/' }
+    maven{ url 'https://repo.maven.apache.org/maven2'}
+    maven { url 'https://packages.aliyun.com/maven/repository/2006123-release-E5ueqt/'
+        credentials {
+            username '5ec22f39723771c6a5cbeb92'
+            password 'B3JvvP(aVxN7'
+        }}
+}
+
+dependencies {
+    implementation 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
+    compile "org.json:json:20170516"
+    compile "junit:junit:4.12"
+    compile "org.junit.jupiter:junit-jupiter-engine:5.0.0"
+
+    compile "com.google.inject:guice:4.1.0"
+    compile "com.google.api-client:google-api-client:1.30.5"
+    compile group: 'org.eclipse.jetty.http2', name: 'http2-client', version: '9.4.20.v20190813'
+    compile group: 'org.eclipse.jetty', name: 'jetty-alpn-java-client', version: '9.4.20.v20190813'
+
+
+    compile "org.dcm4che:dcm4che-net:5.18.1"
+    compile "org.dcm4che:dcm4che-core:5.18.1"
+}
+
+configurations {
+    testArtifacts
+}
+
+task testJar (type: Jar) {
+    baseName = "${project.name}-test"
+    from sourceSets.test.output
+}
+
+artifacts {
+    testArtifacts testJar
+}

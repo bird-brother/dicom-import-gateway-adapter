@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+}
+
+buildDir = '/tmp/gradle_build/dicom_adapter/util'
+
+sourceCompatibility = 1.11
+group 'org.bird.dicom.gateway'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+    maven { url 'http://www.dcm4che.org/maven2/'}
+}
+
+dependencies {
+    implementation 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
+    compile "org.dcm4che:dcm4che-core:5.18.1"
+    compile "org.dcm4che:dcm4che-net:5.18.1"
+    compile "org.json:json:20180813"
+    compile "com.google.cloud:google-cloud-monitoring:1.98.0"
+
+    testCompile "com.google.truth:truth:1.0"
+    testCompile "junit:junit:4.2"
+
+    testCompile project(path: ":dicom_util", configuration: 'testArtifacts')
+}
+configurations {
+    testArtifacts
+}
+
+task testJar (type: Jar) {
+    baseName = "${project.name}-test"
+    from sourceSets.test.output
+}
+
+artifacts {
+    testArtifacts testJar
+}

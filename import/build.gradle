@@ -1,0 +1,93 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-docker-plugin:6.2.0'
+    }
+}
+
+
+plugins {
+    id 'java'
+    id 'application'
+}
+
+def transcoderJvmArgs = ["-Dorg.dcm4che3.imageio.codec.ImageReaderFactory=com/gateway/adapter/imaging/transcoder/transcoder/ImageReaderFactory.properties",
+                         "-Dorg.dcm4che3.imageio.codec.ImageWriterFactory=com/gateway/adapter/imaging/transcoder/transcoder/ImageWriterFactory.properties"]
+
+mainClassName = "com.bird.gateway.adapter.ImportAdapter"
+run {
+    // Accept command line arguments via gradle run -Dexec.args="<args>"
+    args System.getProperty("exec.args", "").split()
+    jvmArgs(transcoderJvmArgs)
+}
+
+
+test {
+    jvmArgs(transcoderJvmArgs)
+}
+
+buildDir = '/tmp/gradle_build/dicom_adapter/import'
+version '1.0.0'
+
+compileJava {
+    // Print out detailed deprecation warnings.
+    options.deprecation = true
+}
+
+
+repositories {
+    mavenCentral()
+    maven { url 'http://maven.dcm4che.org/' }
+    maven{ url 'https://repo.maven.apache.org/maven2'}
+    maven { url 'https://packages.aliyun.com/maven/repository/2006123-release-E5ueqt/'
+        credentials {
+            username '5ec22f39723771c6a5cbeb92'
+            password 'B3JvvP(aVxN7'
+        }}
+}
+
+dependencies {
+
+    compile 'ch.qos.logback:logback-core:1.2.3'
+    testCompile 'org.slf4j:slf4j-simple:1.7.25'
+
+    implementation 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
+
+    compile 'com.google.guava:guava:28.1-jre'
+    compile "com.beust:jcommander:1.72"
+    compile "com.google.api-client:google-api-client:1.30.5"
+    compile "com.google.cloud:google-cloud-storage:1.98.0"
+    compile 'com.google.cloud:google-cloud-nio:0.116.0-alpha'
+
+    compile "org.dcm4che:dcm4che-imageio-opencv:5.18.1"
+    compile 'org.weasis.opencv:weasis-opencv-core:3.5.3'
+    compile "org.dcm4che:dcm4che-core:5.18.1"
+    compile "org.dcm4che:dcm4che-net:5.18.1"
+    compile "org.dcm4che:dcm4che-imageio:5.18.1"
+    runtime "org.dcm4che:dcm4che-imageio-rle:5.18.1"
+    compile "com.github.red1408:deid-redactor:233908ca"
+
+    compile project(":dicom_util")
+    compile project(":util")
+
+    testCompile "com.google.truth:truth:1.0"
+    testCompile "org.mockito:mockito-core:3.+"
+    testCompile "junit:junit:4.2"
+    testCompile project(path: ":dicom_util", configuration: 'testArtifacts')
+    testCompile project(path: ":util", configuration: 'testArtifacts')
+
+}
+
+
+apply plugin: 'com.bmuschko.docker-java-application'
+docker {
+    javaApplication {
+        baseImage = 'openjdk:11'
+        images = [project.findProperty("docker_tag") ?: "import_adapter"]
+        jvmArgs = transcoderJvmArgs
+    }
+}
