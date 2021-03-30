@@ -34,13 +34,17 @@ dependencies {
 
     compile "com.google.inject:guice:4.1.0"
     compile "com.google.api-client:google-api-client:1.30.5"
+    compile 'com.google.protobuf:protobuf-java:3.7.1'
     compile group: 'org.eclipse.jetty.http2', name: 'http2-client', version: '9.4.20.v20190813'
     compile group: 'org.eclipse.jetty', name: 'jetty-alpn-java-client', version: '9.4.20.v20190813'
 
-
     compile "org.dcm4che:dcm4che-net:5.18.1"
     compile "org.dcm4che:dcm4che-core:5.18.1"
+    compile "org.dcm4che:dcm4che-imageio:5.18.1"
+
+    compile "com.github.red1408:deid-redactor:233908ca"
 }
+
 
 configurations {
     testArtifacts

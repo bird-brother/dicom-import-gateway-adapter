@@ -5,11 +5,12 @@ import com.bird.gateway.adapter.cstore.multipledest.IMultipleDestinationUploadSe
 import com.bird.gateway.adapter.cstore.destination.DestinationHolder;
 import com.bird.gateway.adapter.cstore.destination.IDestinationClientFactory;
 import com.bird.gateway.adapter.monitoring.Event;
-import com.google.cloud.healthcare.deid.redactor.DicomRedactor;
+//import com.google.cloud.healthcare.deid.redactor.DicomRedactor;
+import org.bird.redactor.DicomRedactor;
 import com.google.common.io.CountingInputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.bird.gateway.IGatewayClient;
-import org.bird.gateway.IGatewayClient.*;
+import org.bird.gateway.IGatewayClient.DicomGatewayException;
 import org.bird.gateway.imaging.adapter.monitoring.MonitoringService;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;

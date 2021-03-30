@@ -19,16 +19,53 @@ import java.util.Properties;
 public class Flags {
     private static final String PROPERTIES_NAME = "\\config\\application.properties";
 
+    public void setFlag(){
+        FileInputStream in = null;
+        try {
+            String confPath = System.getProperty("user.dir");
+            log.info("confPath£º"+confPath);
+            Properties properties = new Properties();
+            in = new FileInputStream(confPath+PROPERTIES_NAME);
+            properties.load(in);
+
+            clientUID = properties.getProperty("config.client.uid");
+            dimseAET = properties.getProperty("config.dimse.aet");
+            dimsePort = Integer.valueOf(properties.getProperty("config.dimse.port"));
+            gatewayAddress = properties.getProperty("config.dicom.address");
+            persistentFileStorageLocation = properties.getProperty("config.file.storage.location");
+            persistentFileUploadRetryAmount = Integer.valueOf(properties.getProperty("config.file.upload.amount"));
+            transcodeToSyntax = properties.getProperty("config.dicom.transcode");
+
+
+        }catch (IOException e){
+            log.error(e.getMessage());
+        }finally {
+            if(in != null){
+                try {
+                    in.close();
+                }catch (IOException e){
+                    log.error(e.getMessage());
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+    String clientUID = "";
+
     /**
      * Title of DIMSE Application Entity.
      */
-     String dimseAET = "";
 
-
+    String dimseAET = "";
     /**
      * Port the server is listening to for incoming DIMSE requests.
      */
-     Integer dimsePort = 0;
+    Integer dimsePort = 0;
 
     String dicomwebAddr = "";
     String dicomwebStowPath = "";
@@ -74,10 +111,12 @@ public class Flags {
      */
     Boolean useHttp2ForStow = false;
 
+
+    Boolean tagsToReplace = false;
     /**
      * Tags to remove during C-STORE upload, comma separated. Only one of 'redact' flags may be present
      */
-    String tagsToRemove = "00100010,00100020,00100030";
+    String tagsToRemove = "00100020";
 
     /**
      * Tags to keep during C-STORE upload, comma separated. Only one of 'redact' flags may be present
@@ -88,38 +127,6 @@ public class Flags {
      * Filter tags by predefined profile during C-STORE upload. Only one of 'redact' flags may be present. Values: CHC_BASIC"
      */
     String tagsProfile = "";
-
-
-    public void setFlag(){
-        FileInputStream in = null;
-        try {
-            String confPath = System.getProperty("user.dir");
-            log.info("confPath£º"+confPath);
-            Properties properties = new Properties();
-            in = new FileInputStream(confPath+PROPERTIES_NAME);
-            properties.load(in);
-
-            dimseAET = properties.getProperty("config.dimse.aet");
-            dimsePort = Integer.valueOf(properties.getProperty("config.dimse.port"));
-            gatewayAddress = properties.getProperty("config.dicom.address");
-            persistentFileStorageLocation = properties.getProperty("config.file.storage.location");
-            persistentFileUploadRetryAmount = Integer.valueOf(properties.getProperty("config.file.upload.amount"));
-            transcodeToSyntax = properties.getProperty("config.dicom.transcode");
-
-
-        }catch (IOException e){
-            log.error(e.getMessage());
-        }finally {
-            if(in != null){
-                try {
-                    in.close();
-                }catch (IOException e){
-                    log.error(e.getMessage());
-                }
-            }
-        }
-    }
-
 
 
 

@@ -2,6 +2,7 @@ package org.bird.gateway;
 
 import com.google.api.client.http.*;
 import com.google.common.io.CharStreams;
+import lombok.extern.slf4j.Slf4j;
 import org.dcm4che3.net.Status;
 import org.json.JSONArray;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
  * @date 15:52 2021-2-26
  * @description A client for communicating with the DICOM Gateway API.
  */
+@Slf4j
 public class GatewayClient  implements  IGatewayClient{
 
     // Factory to create HTTP requests with proper credentials.
@@ -89,8 +91,9 @@ public class GatewayClient  implements  IGatewayClient{
      * @param in The DICOM input stream.
      */
     public void stowRs(InputStream in) throws IGatewayClient.DicomGatewayException{
-        GenericUrl url = new GenericUrl(StringUtil.joinPath(serviceUrlPrefix, this.stowPath));
 
+
+        GenericUrl url = new GenericUrl(StringUtil.joinPath(serviceUrlPrefix, this.stowPath));
 
         MultipartContent content = new MultipartContent();
         content.setMediaType(new HttpMediaType("multipart/related; type=\"application/dicom\""));
@@ -98,10 +101,13 @@ public class GatewayClient  implements  IGatewayClient{
         InputStreamContent dicomStream = new InputStreamContent("application/dicom", in);
         content.addPart(new MultipartContent.Part(dicomStream));
 
+
         HttpResponse resp = null;
         try {
             HttpRequest httpRequest = requestFactory.buildPostRequest(url, content);
+            httpRequest.setConnectTimeout(15000);
             resp = httpRequest.execute();
+            log.info(String.format("StowRs: %d",resp.getStatusCode()));
         }catch (HttpResponseException e){
             throw new DicomGatewayException(String.format("StowRs: %d, %s", e.getStatusCode(), e.getStatusMessage()),
                     e, e.getStatusCode(), Status.ProcessingFailure);

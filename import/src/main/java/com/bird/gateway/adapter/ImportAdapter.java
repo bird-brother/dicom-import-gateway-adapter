@@ -9,8 +9,10 @@ import com.bird.gateway.adapter.cstore.multipledest.MultipleDestinationUploadSer
 import com.bird.gateway.adapter.cstore.multipledest.sender.CStoreSenderFactory;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.cloud.healthcare.deid.redactor.DicomRedactor;
+//import com.google.cloud.healthcare.deid.redactor.DicomRedactor;
+import org.bird.redactor.DicomRedactor;
 import com.google.cloud.healthcare.deid.redactor.protos.DicomConfigProtos;
+import com.google.cloud.healthcare.deid.redactor.protos.DicomConfigProtos.*;
 import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
 import org.bird.gateway.*;
@@ -191,21 +193,21 @@ public class ImportAdapter {
             throw new IllegalArgumentException("Only one of 'redact' flags may be present");
         }
         if (tagEditFlags > 0) {
-            DicomConfigProtos.DicomConfig.Builder configBuilder = DicomConfigProtos.DicomConfig.newBuilder();
+            DicomConfig.Builder configBuilder = DicomConfig.newBuilder();
             if (!flags.tagsToRemove.isEmpty()) {
                 List<String> removeList = Arrays.asList(flags.tagsToRemove.split(","));
                 configBuilder.setRemoveList(
-                        DicomConfigProtos.DicomConfig.TagFilterList.newBuilder().addAllTags(removeList));
+                        DicomConfig.TagFilterList.newBuilder().addAllTags(removeList));
             } else if (!flags.tagsToKeep.isEmpty()) {
                 List<String> keepList = Arrays.asList(flags.tagsToKeep.split(","));
                 configBuilder.setKeepList(
-                        DicomConfigProtos.DicomConfig.TagFilterList.newBuilder().addAllTags(keepList));
+                        DicomConfig.TagFilterList.newBuilder().addAllTags(keepList));
             } else if (!flags.tagsProfile.isEmpty()){
-                configBuilder.setFilterProfile(DicomConfigProtos.DicomConfig.TagFilterProfile.valueOf(flags.tagsProfile));
+                configBuilder.setFilterProfile(DicomConfig.TagFilterProfile.valueOf(flags.tagsProfile));
             }
 
             try {
-                redactor = new DicomRedactor(configBuilder.build());
+                redactor = new DicomRedactor(configBuilder.build(),flags.clientUID,flags.tagsToReplace);
             } catch (Exception e) {
                 throw new IOException("Failure creating DICOM redactor", e);
             }
