@@ -5,7 +5,7 @@
 
 Refer to the Google project: https://github.com/GoogleCloudPlatform/healthcare-dicom-dicomweb-adapter
 
-##Modify as follows
+## Modify as follows
   1. Delete GoogleAPI authentication service 
   2. Add custom Tag(PatientID，StudyInstanceUID,SeriesInstanceUID，SOPInstanceUID)
  
