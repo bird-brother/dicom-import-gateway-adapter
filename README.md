@@ -2,8 +2,7 @@
 
 # DICOM Import Gateway Adapter  (D-IGA)
 
-
-Refer to the Google project: https://github.com/GoogleCloudPlatform/healthcare-dicom-dicomweb-adapter
+Google project: https://github.com/GoogleCloudPlatform/healthcare-dicom-dicomweb-adapter
 
 ## Modify as follows
   1. Delete GoogleAPI authentication service 
