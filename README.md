@@ -6,5 +6,5 @@ Google project: https://github.com/GoogleCloudPlatform/healthcare-dicom-dicomweb
 
 ## Modify as follows
   1. Delete GoogleAPI authentication service 
-  2. Add custom Tag(PatientID，StudyInstanceUID,SeriesInstanceUID，SOPInstanceUID)
+  2. class DicomRedactor Add custom Tag(PatientID，StudyInstanceUID,SeriesInstanceUID，SOPInstanceUID)
  
